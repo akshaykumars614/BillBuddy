@@ -2,20 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Signup Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Bill-Buddy</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <form action="signup_process.php" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <label for="confirm_password">Confirm Password:</label>
-        <input type="password" id="confirm_password" name="confirm_password" required>
-        <br>
-        <input type="submit" value="Signup">
-    </form>
+    <header>
+        <div class="container">
+            <h1>Bill-Buddy</h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="signup-box">
+            <h2>Sign Up</h2>
+            <form action="signup_process.php" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <br>
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+                <br>
+                <input type="submit" value="Signup">
+            </form>
+
+
+            <p>Already have an account? <a href="login.html">Login</a></p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Bill-Buddy. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
+

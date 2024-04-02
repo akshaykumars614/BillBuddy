@@ -3,7 +3,7 @@
 $host = 'localhost';
 $dbUsername = 'root';
 $dbPassword = '';
-$dbName = 'BillBuddy';
+$dbName = 'billbuddy';
 
 // Create database connection
 $conn = new mysqli($host, $dbUsername, $dbPassword, $dbName);
@@ -33,8 +33,11 @@ if ($password != $confirm_password) {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $insert = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
         $insert->bind_param("ss", $username, $hashed_password);
-        if ($insert->execute()) {
+        if ($insert->execute()) 
+        {
             echo "User registered successfully!";
+            include 'send_email.php';
+            
         } else {
             echo "Error: " . $insert->error;
         }

@@ -16,20 +16,18 @@
     <main>
         <div class="signup-box">
             <h2>Sign Up</h2>
-            <form action="signup_process.php" method="post">
+            <form>
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
-                <br>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
-                <br>
-                <label for="confirm_password">Confirm Password:</label>
-                <input type="password" id="confirm_password" name="confirm_password" required>
-                <br>
-                <input type="submit" value="Signup">
+
+                <button type="submit">Sign Up</button>
             </form>
-
-
             <p>Already have an account? <a href="login.html">Login</a></p>
         </div>
     </main>
@@ -41,4 +39,3 @@
     </footer>
 </body>
 </html>
-

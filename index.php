@@ -32,8 +32,17 @@
             </div>
         </div>
     </header>
-
-    <!-- The rest of your HTML structure remains unchanged -->
+    <main>
+        <div class="container">
+            <div class="dashboard-box">
+                <h2>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></h2>
+                <button onclick="location.href='add_personal_expense.php';">Add Personal Expense</button>
+                <button onclick="location.href='add_group_expense.php';">Add Group Expense</button>
+                <button onclick="location.href='view_expenses.php';">Add Group Expense</button>
+                <!-- Additional content here -->
+            </div>
+        </div>
+    </main>
 
     <footer>
         <div class="container">

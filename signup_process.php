@@ -1,50 +1,47 @@
 <?php
-// Database configuration
-$host = 'localhost';
-$dbUsername = 'root';
-$dbPassword = '';
-$dbName = 'billbuddy';
+require_once 'conn.php'; // Include the database configuration
 
-// Create database connection
-$conn = new mysqli($host, $dbUsername, $dbPassword, $dbName);
+// Check if the form was submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Check if the username and passwords are set
+    if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['confirm_password'])) {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+        // Proceed only if passwords match
+        if ($password === $confirm_password) {
+            // Check if username exists
+            $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $stmt->store_result();
 
-$username = $_POST['username'];
-$password = $_POST['password'];
-$confirm_password = $_POST['confirm_password'];
-
-if ($password != $confirm_password) {
-    echo "Passwords do not match!";
-} else {
-    // Check if username exists
-    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
-
-    if ($stmt->num_rows > 0) {
-        echo "Username already exists!";
-    } else {
-        // Hash password and insert new user
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $insert = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-        $insert->bind_param("ss", $username, $hashed_password);
-        if ($insert->execute()) 
-        {
-            echo "User registered successfully!";
-            include 'send_email.php';
-            
+            if ($stmt->num_rows > 0) {
+                echo "Username already exists!";
+            } else {
+                // Hash password and insert new user
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $insert = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
+                $insert->bind_param("ss", $username, $hashed_password);
+                if ($insert->execute()) {
+                    echo "User registered successfully!";
+                    // Include the email script here, make sure send_email.php is in the correct path
+                    include 'send_email.php';
+                } else {
+                    // echo "Error: " . $conn->error;
+                }
+                $insert->close();
+            }
+            $stmt->close();
         } else {
-            echo "Error: " . $insert->error;
+            echo "Passwords do not match!";
         }
-        $insert->close();
+    } else {
+        echo "Please fill in all required fields.";
     }
-    $stmt->close();
+} else {
+    echo "Invalid request method.";
 }
 
-$conn->close();
 ?>

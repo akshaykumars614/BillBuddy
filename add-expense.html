@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense - Bill-Buddy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bill-Buddy</h1>
+            <nav>
+                
+            </nav>
+        </div>
+    </header>
+
+    <div class="grid-container">
+        <section id="add-expense">
+            <div class="container">
+                <h2>Add Expense</h2>
+                <form>
+                    <label for="expense-name">Expense Name:</label>
+                    <input type="text" id="expense-name" name="expense-name" required>
+                    
+                    <label for="expense-amount">Amount:</label>
+                    <input type="number" id="expense-amount" name="expense-amount" required>
+                    
+                    <label for="expense-category">Category:</label>
+                    <select id="expense-category" name="expense-category">
+                        <option value="food">Food</option>
+                        <option value="transportation">Transportation</option>
+                        <option value="utilities">Utilities</option>
+                        <!-- Add more options as needed -->
+                    </select>
+                    
+                    <button type="submit" class="button">Submit</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Bill-Buddy. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

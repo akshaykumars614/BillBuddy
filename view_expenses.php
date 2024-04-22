@@ -1,36 +1,60 @@
 <?php
 session_start();
 
-// Redirect to login if not logged in or if username is not in the session
+class UserManager {
+    private $conn;
+
+    public function __construct($conn) {
+        $this->conn = $conn;
+    }
+
+    public function getUserIdByUsername($username) {
+        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $stmt->bind_result($userId);
+        $stmt->fetch();
+        $stmt->close();
+        return $userId;
+    }
+}
+
+class ExpenseManager {
+    private $conn;
+
+    public function __construct($conn) {
+        $this->conn = $conn;
+    }
+
+    public function getUserExpenses($userId) {
+        $stmt = $this->conn->prepare("SELECT description, amount, date FROM group_expenses WHERE user_id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $expenses = [];
+        while ($expense = $result->fetch_assoc()) {
+            $expenses[] = $expense;
+        }
+        $stmt->close();
+        return $expenses;
+    }
+}
+
+require_once 'conn.php'; // Include your database connection configuration
+
 if (!isset($_SESSION['username'])) {
     header('Location: login.php');
     exit();
 }
 
-require_once 'conn.php'; // Include your database connection configuration
+$userManager = new UserManager($conn);
+$expenseManager = new ExpenseManager($conn);
 
-// First, get the user_id from the username stored in the session
-$stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
-$stmt->bind_param("s", $_SESSION['username']);
-$stmt->execute();
-$stmt->bind_result($user_id);
-$stmt->fetch();
-$stmt->close();
-
-require_once 'conn.php'; // Include your database connection configuration
-
+// Retrieve the user ID from the session
+$user_id = $userManager->getUserIdByUsername($_SESSION['username']);
 
 // Fetch the user's expenses
-$stmt = $conn->prepare("SELECT description, amount, date FROM group_expenses WHERE user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-$expenses = [];
-while ($expense = $result->fetch_assoc()) {
-    $expenses[] = $expense;
-}
-$stmt->close();
+$expenses = $expenseManager->getUserExpenses($user_id);
 ?>
 
 <!DOCTYPE html>

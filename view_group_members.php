@@ -1,3 +1,27 @@
+<?php
+class GroupManager {
+    private $conn;
+
+    public function __construct($conn) {
+        $this->conn = $conn;
+    }
+
+    public function getMembersByGroupName($groupName) {
+        $stmt = $this->conn->prepare("SELECT u.username FROM users u
+                                      INNER JOIN user_group ug ON u.id = ug.user_id
+                                      INNER JOIN groups g ON ug.group_id = g.group_id
+                                      WHERE g.group_name = ?");
+        $stmt->bind_param("s", $groupName);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+    public function closeConnection() {
+        $this->conn->close();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,28 +70,12 @@
 
         <?php
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $host = 'localhost'; // Replace with your host
-            $dbUsername = 'root'; // Replace with your database username
-            $dbPassword = ''; // Replace with your database password
-            $dbName = 'billbuddy'; // Replace with your database name
+            require_once 'conn.php'; // Your DB connection script
 
-            // Create database connection
-            $conn = new mysqli($host, $dbUsername, $dbPassword, $dbName);
-
-            // Check connection
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
-
+            $groupManager = new GroupManager($conn);
             $groupName = $_POST['group_name'];
 
-            $stmt = $conn->prepare("SELECT u.username FROM users u
-                                     INNER JOIN user_group ug ON u.id = ug.user_id
-                                     INNER JOIN groups g ON ug.group_id = g.group_id
-                                     WHERE g.group_name = ?");
-            $stmt->bind_param("s", $groupName);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $groupManager->getMembersByGroupName($groupName);
 
             if ($result && $result->num_rows > 0) {
                 echo "<table><tr><th>Members of " . htmlspecialchars($groupName) . "</th></tr>";
@@ -78,8 +86,8 @@
             } else {
                 echo "No members found for this group or group does not exist.";
             }
-            $stmt->close();
-            $conn->close();
+
+            $groupManager->closeConnection();
         }
         ?>
     </div>

@@ -11,7 +11,7 @@ require 'vendor/autoload.php'; // If you're using Composer (recommended)
 $email = new \SendGrid\Mail\Mail(); 
 $email->setFrom("billbuddy2024@gmail.com", "HR management at SendGrid");
 $email->setSubject("Hiring");
-$email->addTo("gobank@syr.edu", "Example User");
+$email->addTo("vrahate@syr.edu", "Example User");
 $email->addContent("text/plain", "You Have been selected for a job interview at SendGrid.com");
 $email->addContent(
     "text/html", "<strong>You Have been selected for a job interview at SendGrid.com</strong>"
@@ -25,3 +25,4 @@ try {
 } catch (Exception $e) {
     echo 'Caught exception: '. $e->getMessage() ."\n";
 }
+
